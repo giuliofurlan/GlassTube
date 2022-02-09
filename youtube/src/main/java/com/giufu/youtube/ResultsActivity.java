@@ -96,7 +96,7 @@ public class ResultsActivity extends AppCompatActivity
                         .getJSONObject("thumbnails")
                         .getJSONObject("default")
                         .getString("url");
-
+                //https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBNn-VMyK3OTmV_EGCVYMOPSVC2qQwQqxA&type=video&q=rap%20god
                 titles.add(title);
                 ids.add(id);
                 thumbnails.add(thumbnail);

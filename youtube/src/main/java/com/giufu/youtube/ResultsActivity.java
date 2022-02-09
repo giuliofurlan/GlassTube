@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +22,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.giufu.youtube.utils.GlassGestureDetector;
 import com.giufu.youtube.utils.YoutubeConfig;
 import com.google.android.material.tabs.TabLayout;
@@ -46,7 +48,9 @@ public class ResultsActivity extends AppCompatActivity
     private String JsonResults;
     ArrayList<String> titles = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
+    ArrayList<String> thumbnails = new ArrayList<>();
     TextView titleTextVies;
+    ImageView imageView;
     int current_video = 0;
 
     @Override
@@ -59,6 +63,7 @@ public class ResultsActivity extends AppCompatActivity
         glassGestureDetector = new GlassGestureDetector(this, this);
         new JsonTask().execute(value);
         titleTextVies = findViewById(R.id.title_text_view);
+        imageView = findViewById(R.id.thumbnails_image_view);
     }
 
     void openVideo(String id){
@@ -69,6 +74,8 @@ public class ResultsActivity extends AppCompatActivity
 
     void updatePreview(){
         titleTextVies.setText(titles.get(current_video));
+        Glide.with(this).load(thumbnails.get(current_video)).into(imageView);
+
     }
 
     void diplayResults(){
@@ -76,10 +83,23 @@ public class ResultsActivity extends AppCompatActivity
             JSONObject jsonObject = new JSONObject(JsonResults);
             JSONArray items = jsonObject.getJSONArray("items");
             for (int i=0; i < items.length(); i++) {
-                String title = items.getJSONObject(i).getJSONObject("snippet").getString("title");
-                String id = items.getJSONObject(i).getJSONObject("id").getString("videoId");
+                String title = items.getJSONObject(i)
+                        .getJSONObject("snippet")
+                        .getString("title");
+
+                String id = items.getJSONObject(i)
+                        .getJSONObject("id")
+                        .getString("videoId");
+
+                String thumbnail = items.getJSONObject(i)
+                        .getJSONObject("snippet")
+                        .getJSONObject("thumbnails")
+                        .getJSONObject("default")
+                        .getString("url");
+
                 titles.add(title);
                 ids.add(id);
+                thumbnails.add(thumbnail);
                 updatePreview();
             }
         }

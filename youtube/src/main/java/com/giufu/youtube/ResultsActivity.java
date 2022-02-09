@@ -124,7 +124,7 @@ public class ResultsActivity extends AppCompatActivity
                 Log.d("App", "TAPPED!");
                 openVideo(ids.get(current_video));
                 return true;
-            case SWIPE_FORWARD:
+            case SWIPE_BACKWARD:
                 if(current_video<4){
                     current_video++;
                     updatePreview();
@@ -134,7 +134,7 @@ public class ResultsActivity extends AppCompatActivity
                     updatePreview();
                 }
                 return true;
-            case SWIPE_BACKWARD:
+            case SWIPE_FORWARD:
                 if(current_video>0){
                     current_video++;
                     updatePreview();

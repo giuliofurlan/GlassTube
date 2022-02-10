@@ -16,16 +16,15 @@ import com.giufu.youtube.utils.YoutubeConfig;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 public class ResultsActivity extends AppCompatActivity
         implements GlassGestureDetector.OnGestureListener {
+
     private GlassGestureDetector glassGestureDetector;
     private String JsonResults;
     ArrayList<String> titles = new ArrayList<>();
@@ -50,6 +49,7 @@ public class ResultsActivity extends AppCompatActivity
 
     void openVideo(String id){
         Intent intent = new Intent(this,VideoActivity.class);
+        intent.putExtra("id",id);
         startActivity(intent);
     }
 
@@ -87,6 +87,7 @@ public class ResultsActivity extends AppCompatActivity
             }
         }
         catch (Exception e) { e.printStackTrace(); }
+
     }
 
     @Override
@@ -129,7 +130,10 @@ public class ResultsActivity extends AppCompatActivity
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
-        protected void onPreExecute() { super.onPreExecute(); }
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+        }
         protected String doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
@@ -142,13 +146,12 @@ public class ResultsActivity extends AppCompatActivity
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuffer buffer = new StringBuffer();
                 String line = "";
+
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
                 }
                 return buffer.toString();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             } finally {
                 if (connection != null) {
@@ -158,7 +161,7 @@ public class ResultsActivity extends AppCompatActivity
                     if (reader != null) {
                         reader.close();
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

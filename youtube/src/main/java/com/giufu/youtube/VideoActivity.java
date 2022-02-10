@@ -16,6 +16,8 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerView;
 
+import java.util.concurrent.TimeUnit;
+
 public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureDetector.OnGestureListener{
     YouTubePlayer.OnInitializedListener mOnInitializedListener;
     private final String TAG = "VideoActivyty";
@@ -23,6 +25,7 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
     YouTubePlayerView youTubePlayerView;
     boolean isPaused = false;
     YouTubePlayer player;
+    TextView currentTimeView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
 
         Intent intent = getIntent();
         String video_id = intent.getStringExtra("id");
-
+        currentTimeView = findViewById(R.id.time_text_view);
 
         youTubePlayerView = (YouTubePlayerView) findViewById(R.id.player);
         youTubePlayerView.setEnabled(false);
@@ -68,6 +71,11 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
         return glassGestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
     }
 
+    String millisToTime(int millis){
+        return String.format("%02d:%02d:%02d", TimeUnit.MILLISECONDS.toHours(millis),
+                TimeUnit.MILLISECONDS.toMinutes(millis) % TimeUnit.HOURS.toMinutes(1),
+                TimeUnit.MILLISECONDS.toSeconds(millis) % TimeUnit.MINUTES.toSeconds(1));
+    }
     @Override
     public boolean onGesture(GlassGestureDetector.Gesture gesture) {
         switch (gesture) {
@@ -75,9 +83,14 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
                 Log.d("App", "TAPPED!");
                 if (isPaused){
                     player.play();
+                    currentTimeView.setVisibility(View.GONE);
                 }
                 else{
                     player.pause();
+                    String currentTime = millisToTime(player.getCurrentTimeMillis());
+                    String totalMillis = millisToTime(player.getDurationMillis());
+                    currentTimeView.setText(currentTime+"/"+totalMillis);
+                    currentTimeView.setVisibility(View.VISIBLE);
                 }
                 isPaused = !isPaused;
                 return true;

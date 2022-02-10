@@ -35,6 +35,7 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
 
 
         youTubePlayerView = (YouTubePlayerView) findViewById(R.id.player);
+        youTubePlayerView.setEnabled(false);
 
         youTubePlayerView.initialize(YoutubeConfig.getApiKey(),
             new YouTubePlayer.OnInitializedListener() {
@@ -45,6 +46,9 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
                     // do any work here to cue video, play video, etc.
                     youTubePlayer.loadVideo(video_id);
                     player = youTubePlayer;
+                    player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
+                    player.setShowFullscreenButton(false);
+
                 }
                 @Override
                 public void onInitializationFailure(YouTubePlayer.Provider provider,

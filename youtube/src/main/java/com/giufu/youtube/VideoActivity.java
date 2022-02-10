@@ -46,7 +46,6 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
                 public void onInitializationSuccess(YouTubePlayer.Provider provider,
                                                     YouTubePlayer youTubePlayer, boolean b) {
                     Log.d(TAG, "onInitializationSuccess: success");
-                    // do any work here to cue video, play video, etc.
                     youTubePlayer.loadVideo(video_id);
                     player = youTubePlayer;
                     player.setPlayerStyle(YouTubePlayer.PlayerStyle.CHROMELESS);
@@ -94,7 +93,6 @@ public class VideoActivity extends YouTubeBaseActivity  implements GlassGestureD
                 }
                 isPaused = !isPaused;
                 return true;
-
             case SWIPE_BACKWARD:
                 player.seekToMillis(player.getCurrentTimeMillis()+30000);
                 return true;

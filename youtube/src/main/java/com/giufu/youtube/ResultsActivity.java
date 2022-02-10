@@ -3,7 +3,6 @@ package com.giufu.youtube;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,17 +26,13 @@ import java.util.ArrayList;
 
 public class ResultsActivity extends AppCompatActivity
         implements GlassGestureDetector.OnGestureListener {
-
     private GlassGestureDetector glassGestureDetector;
     private String JsonResults;
     ArrayList<String> titles = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
     ArrayList<String> thumbnails = new ArrayList<>();
-
-
     TextView titleTextVies;
     ImageView thumbnailView;
-
     int current_video = 0;
 
     @Override
@@ -49,17 +44,12 @@ public class ResultsActivity extends AppCompatActivity
         String value = intent.getStringExtra("query");
         glassGestureDetector = new GlassGestureDetector(this, this);
         new JsonTask().execute(value);
-
         titleTextVies = findViewById(R.id.title_text_view);
         thumbnailView = findViewById(R.id.thumbnail_image_view);
-
-
-
     }
 
     void openVideo(String id){
         Intent intent = new Intent(this,VideoActivity.class);
-        intent.putExtra("id",id);
         startActivity(intent);
     }
 
@@ -70,12 +60,9 @@ public class ResultsActivity extends AppCompatActivity
             .load(thumbnails.get(current_video))
             .override(480, 270)
             .into(thumbnailView);
-
-
-
     }
 
-    void diplayResults(){
+    void displayResults(){
         try {
             JSONObject jsonObject = new JSONObject(JsonResults);
             JSONArray items = jsonObject.getJSONArray("items");
@@ -93,7 +80,6 @@ public class ResultsActivity extends AppCompatActivity
                         .getJSONObject("thumbnails")
                         .getJSONObject("medium")
                         .getString("url");
-                //https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBNn-VMyK3OTmV_EGCVYMOPSVC2qQwQqxA&type=video&q=rap%20god
                 titles.add(title);
                 ids.add(id);
                 thumbnails.add(thumbnail);
@@ -101,7 +87,6 @@ public class ResultsActivity extends AppCompatActivity
             }
         }
         catch (Exception e) { e.printStackTrace(); }
-
     }
 
     @Override
@@ -118,28 +103,25 @@ public class ResultsActivity extends AppCompatActivity
     public boolean onGesture(GlassGestureDetector.Gesture gesture) {
         switch (gesture) {
             case TAP:
-                Log.d("App", "TAPPED!");
                 openVideo(ids.get(current_video));
                 return true;
             case SWIPE_BACKWARD:
                 if(current_video<4){
                     current_video++;
-                    updatePreview();
                 }
                 else {
                     current_video=0;
-                    updatePreview();
                 }
+                updatePreview();
                 return true;
             case SWIPE_FORWARD:
                 if(current_video>0){
                     current_video++;
-                    updatePreview();
                 }
                 else {
                     current_video=0;
-                    updatePreview();
                 }
+                updatePreview();
                 return true;
             default:
                 return false;
@@ -147,10 +129,7 @@ public class ResultsActivity extends AppCompatActivity
     }
 
     private class JsonTask extends AsyncTask<String, String, String> {
-        protected void onPreExecute() {
-            super.onPreExecute();
-
-        }
+        protected void onPreExecute() { super.onPreExecute(); }
         protected String doInBackground(String... params) {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
@@ -163,7 +142,6 @@ public class ResultsActivity extends AppCompatActivity
                 reader = new BufferedReader(new InputStreamReader(stream));
                 StringBuffer buffer = new StringBuffer();
                 String line = "";
-
                 while ((line = reader.readLine()) != null) {
                     buffer.append(line + "\n");
                 }
@@ -190,7 +168,7 @@ public class ResultsActivity extends AppCompatActivity
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             JsonResults = result;
-            diplayResults();
+            displayResults();
         }
     }
 

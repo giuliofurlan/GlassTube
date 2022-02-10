@@ -1,34 +1,20 @@
 package com.giufu.youtube;
 
-import android.app.Activity;
-import android.app.ListActivity;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.giufu.youtube.utils.GlassGestureDetector;
 import com.giufu.youtube.utils.YoutubeConfig;
-import com.google.android.material.tabs.TabLayout;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,8 +24,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
 public class ResultsActivity extends AppCompatActivity
         implements GlassGestureDetector.OnGestureListener {
@@ -49,8 +33,11 @@ public class ResultsActivity extends AppCompatActivity
     ArrayList<String> titles = new ArrayList<>();
     ArrayList<String> ids = new ArrayList<>();
     ArrayList<String> thumbnails = new ArrayList<>();
+
+
     TextView titleTextVies;
-    ImageView imageView;
+    ImageView thumbnailView;
+
     int current_video = 0;
 
     @Override
@@ -62,8 +49,12 @@ public class ResultsActivity extends AppCompatActivity
         String value = intent.getStringExtra("query");
         glassGestureDetector = new GlassGestureDetector(this, this);
         new JsonTask().execute(value);
+
         titleTextVies = findViewById(R.id.title_text_view);
-        imageView = findViewById(R.id.thumbnails_image_view);
+        thumbnailView = findViewById(R.id.thumbnail_image_view);
+
+
+
     }
 
     void openVideo(String id){
@@ -74,7 +65,13 @@ public class ResultsActivity extends AppCompatActivity
 
     void updatePreview(){
         titleTextVies.setText(titles.get(current_video));
-        Glide.with(this).load(thumbnails.get(current_video)).into(imageView);
+        Glide
+            .with(this)
+            .load(thumbnails.get(current_video))
+            .override(480, 270)
+            .into(thumbnailView);
+
+
 
     }
 
@@ -94,7 +91,7 @@ public class ResultsActivity extends AppCompatActivity
                 String thumbnail = items.getJSONObject(i)
                         .getJSONObject("snippet")
                         .getJSONObject("thumbnails")
-                        .getJSONObject("default")
+                        .getJSONObject("medium")
                         .getString("url");
                 //https://www.googleapis.com/youtube/v3/search?part=snippet&key=AIzaSyBNn-VMyK3OTmV_EGCVYMOPSVC2qQwQqxA&type=video&q=rap%20god
                 titles.add(title);

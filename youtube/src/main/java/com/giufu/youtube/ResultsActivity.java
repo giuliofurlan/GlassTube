@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,42 +28,54 @@ public class ResultsActivity extends AppCompatActivity
 
     private GlassGestureDetector glassGestureDetector;
     private String JsonResults;
-    ArrayList<String> titles = new ArrayList<>();
-    ArrayList<String> ids = new ArrayList<>();
-    ArrayList<String> thumbnails = new ArrayList<>();
-    TextView titleTextVies;
-    ImageView thumbnailView;
-    int current_video = 0;
+    private ArrayList<String> titles = new ArrayList<>();
+    private ArrayList<String> ids = new ArrayList<>();
+    private ArrayList<String> thumbnails = new ArrayList<>();
+    private TextView titleTextVies;
+    private ImageView thumbnailView;
+    private ProgressBar progressBar;
+    private int current_video = 0;
+    private int videosCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.results_activity);
-        Intent intent = getIntent();
-        String value = intent.getStringExtra("query");
         glassGestureDetector = new GlassGestureDetector(this, this);
-        new JsonTask().execute(value);
         titleTextVies = findViewById(R.id.title_text_view);
         thumbnailView = findViewById(R.id.thumbnail_image_view);
+        progressBar = findViewById(R.id.progressBar);
+
+        Intent intent = getIntent();
+        String value = intent.getStringExtra("query");
+        if(value!=null){
+            new JsonTask().execute(value);
+        }
+        else
+        {
+            String jsonVideoList = intent.getStringExtra("list");
+
+        }
+
     }
 
-    void openVideo(String id){
+    private void openVideo(String id){
         Intent intent = new Intent(this,VideoActivity.class);
         intent.putExtra("id",id);
         startActivity(intent);
     }
 
-    void updatePreview(){
+    private void updatePreview(){
         titleTextVies.setText(titles.get(current_video));
-        Glide
-            .with(this)
+        Glide.with(this)
             .load(thumbnails.get(current_video))
             .override(480, 270)
             .into(thumbnailView);
+        progressBar.setProgress(current_video+1);
     }
 
-    void displayResults(){
+    private void displayResults(){
         try {
             JSONObject jsonObject = new JSONObject(JsonResults);
             JSONArray items = jsonObject.getJSONArray("items");
@@ -70,11 +83,9 @@ public class ResultsActivity extends AppCompatActivity
                 String title = items.getJSONObject(i)
                         .getJSONObject("snippet")
                         .getString("title");
-
                 String id = items.getJSONObject(i)
                         .getJSONObject("id")
                         .getString("videoId");
-
                 String thumbnail = items.getJSONObject(i)
                         .getJSONObject("snippet")
                         .getJSONObject("thumbnails")
@@ -83,18 +94,19 @@ public class ResultsActivity extends AppCompatActivity
                 titles.add(title);
                 ids.add(id);
                 thumbnails.add(thumbnail);
+                videosCount++;
                 updatePreview();
             }
+            progressBar.setMax(videosCount);
         }
         catch (Exception e) { e.printStackTrace(); }
-
     }
-
+    //for EE2
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return glassGestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
     }
-
+    //for XE - EE1
     @Override
     public boolean onGenericMotionEvent(MotionEvent ev) {
         return glassGestureDetector.onTouchEvent(ev) || super.dispatchTouchEvent(ev);
@@ -106,8 +118,8 @@ public class ResultsActivity extends AppCompatActivity
             case TAP:
                 openVideo(ids.get(current_video));
                 return true;
-            case SWIPE_BACKWARD:
-                if(current_video<4){
+            case SWIPE_BACKWARD: //next video
+                if(current_video<(videosCount-1)){
                     current_video++;
                 }
                 else {
@@ -115,14 +127,17 @@ public class ResultsActivity extends AppCompatActivity
                 }
                 updatePreview();
                 return true;
-            case SWIPE_FORWARD:
+            case SWIPE_FORWARD: //previous video
                 if(current_video>0){
-                    current_video++;
+                    current_video--;
                 }
                 else {
-                    current_video=0;
+                    current_video=videosCount-1;
                 }
                 updatePreview();
+                return true;
+            case SWIPE_DOWN:
+                finish();
                 return true;
             default:
                 return false;
@@ -138,7 +153,7 @@ public class ResultsActivity extends AppCompatActivity
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
-                String q = params[0].replace(" ", "%20");//ez url encoding, needed here but not in webview lol
+                String q = params[0].replace(" ", "%20");//ez url encoding, needed here
                 URL url = new URL(YoutubeConfig.getApiUrl()+q);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.connect();
@@ -174,6 +189,4 @@ public class ResultsActivity extends AppCompatActivity
             displayResults();
         }
     }
-
-
 }

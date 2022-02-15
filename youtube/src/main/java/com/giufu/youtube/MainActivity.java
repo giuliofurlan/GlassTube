@@ -29,9 +29,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements GlassGestureDetector.OnGestureListener {
     private static final int REQUEST_CODE = 999;
-    private int scrollSpeed = 100;
     private GlassGestureDetector glassGestureDetector;
-    private WebView myWebView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,7 +63,6 @@ public class MainActivity extends AppCompatActivity implements GlassGestureDetec
             Log.d("app", "results: " + results.toString());
             if (results != null && results.size() > 0 && !results.get(0).isEmpty()) {
                 String speechResult = results.get(0);
-
                 Intent intent = new Intent(this,ResultsActivity.class);
                 intent.putExtra("query",speechResult);
                 startActivity(intent);
@@ -80,12 +77,9 @@ public class MainActivity extends AppCompatActivity implements GlassGestureDetec
         View decorView = getWindow().getDecorView();
         decorView.setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_IMMERSIVE
-                        // Set the content to appear under the system bars so that the
-                        // content doesn't resize when the system bars hide and show.
                         | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        // Hide the nav bar and status bar
                         | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         | View.SYSTEM_UI_FLAG_FULLSCREEN);
     }
@@ -104,7 +98,6 @@ public class MainActivity extends AppCompatActivity implements GlassGestureDetec
     public boolean onGesture(GlassGestureDetector.Gesture gesture) {
         switch (gesture) {
             case TAP:
-                Log.d("App", "TAPPED!");
                 detectSpeech();
                 return true;
             default:

@@ -14,52 +14,30 @@
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="80px"
-            android:paddingRight="80px"
-            >
-
+            android:paddingRight="80px">
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                         <ImageView
                             android:id="@+id/thumbnail_image_view"
                             android:layout_width="480px"
-                            android:layout_height="270px"
-                        />
-                        <!-- video duratio
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@id/thumbnail_image_view"
-                            android:text="12:50"
-                            android:textColor="@color/white"
-                            android:background="@color/semi_transparent"
-                        />
-                        -->
+                            android:layout_height="270px" />
                 </RelativeLayout>
-
-
-
-
-
 
                 <TextView
                     android:id="@+id/title_text_view"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textSize="30px"
+                    android:layout_height="70px"
+                    android:gravity="center"
+                    android:text="@string/loading"
                     android:textColor="@color/white"
-                    android:paddingBottom="10px"
-                    android:paddingTop="10px"
-                    />
+                    android:textSize="20px" />
 
-                <TextView
-                    android:id="@+id/footer"
+                <ProgressBar
+                    android:id="@+id/progressBar"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TextView"
-                    android:textSize="20px"
-                    android:textColor="@color/white" />
+                    android:layout_height="20px"
+                    style="?android:attr/progressBarStyleHorizontal" />
         </LinearLayout>
 
 </LinearLayout>

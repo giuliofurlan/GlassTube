@@ -1,6 +1,6 @@
 # GlassTube
 ### My attempt to introduce a Youtube application to glasses
-Works on any 4.4+ android device (NO GDK).
+Works on both XE and EE
 ## Features
 
 - search video with basic voice recognition
@@ -8,8 +8,8 @@ Works on any 4.4+ android device (NO GDK).
 - properly display videos
 - ability to start,pause and move 30 seconds with swipes
 ## todo
-- custom video controls (progressbar)
-- decent looking search result
+- custom video controls
+- ~~decent looking search results~~
 - put something on the main page
 
 ## Installation

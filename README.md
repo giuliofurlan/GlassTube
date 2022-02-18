@@ -6,8 +6,9 @@ Works on both XE and EE
 - search video with basic voice recognition
 - chose between 5 search results
 - properly display videos
-- ability to start,pause and move 30 seconds with swipes
+- ability to start, pause and move 30 seconds with swipes
 ## todo
+- you tell me
 - custom video controls
 - ~~decent looking search results~~
 - put something on the main page
@@ -15,10 +16,9 @@ Works on both XE and EE
 ## Installation
 Google APIs need an [original installation of youtube](https://www.apkmirror.com/apk/google-inc/youtube/youtube-14-07-59-release/youtube-14-07-59-17-android-apk-download/) to work properly, install the last one available for your firmware (4.4 on XE and 8.1 on EE2)
 ```sh
-adb install com.google.android.youtube_14.07.59-1407592300_minAPI19.armeabi-v7a.nodpi._apkmirror.com.apk
-adb install youtube_debug.apk
+adb install com.google.android.youtube_14.07.59-1407592300_minAPI19.armeabi-v7a.nodpi._apkmirror.com.apk #example for XE
+adb install youtube_debug.apk #or compile with Android Studio
 ```
 
 used code from
-https://github.com/tujson/GlassEcho
-https://github.com/MatthewHallberg/GoogleGlassTest
+https://github.com/tujson/GlassEcho (gestures on XE) and https://github.com/MatthewHallberg/GoogleGlassTest (gestures in general)
